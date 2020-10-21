@@ -24,13 +24,11 @@ public class PlaceService {
     private AddressRepository addressRepository;
     @Autowired
     private RestTemplate restTemplate;
+    
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public List<Place> getAllPlaces() {
         return placeRepository.findAll();
-    }
-
-    public List<Place> findByCountry(String country) {
-        return placeRepository.findByAddressCountry(country);
     }
 
     public Optional<Place> findPlaceAndSave(Double latitude, Double longitude) throws JsonProcessingException {
@@ -40,14 +38,12 @@ public class PlaceService {
             Place place = optionalPlace.get();
             place.setLongitude(longitude);
             place.setLatitude(latitude);
-            System.out.println(optionalPlace);
 
             addressRepository.save(place.getAddress());
             placeRepository.save(place);
 
             return optionalPlace;
         }
-
         return Optional.empty();
     }
 
@@ -59,8 +55,7 @@ public class PlaceService {
             return Optional.empty();
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(response);
+        JsonNode jsonNode = objectMapper.readTree(response);
         
         if (jsonNode.get("error") != null) {
             return Optional.empty();
@@ -71,7 +66,7 @@ public class PlaceService {
         JsonNode firstFeatureProperties = firstFeature.get("properties");
         String details = firstFeatureProperties.toString();
         
-        Place place = mapper.readValue(details, Place.class);
+        Place place = objectMapper.readValue(details, Place.class);
 
         return Optional.of(place);
     }
