@@ -1,6 +1,8 @@
 package petproject.geodata.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,9 +24,9 @@ public class PlaceController {
         return "Alive";
     }
 
-    @GetMapping("/place")
-    Optional<Place> findPlace(@RequestParam Double longitude, @RequestParam Double latitude) {
-        return placeService.findPlaceAndSave(longitude, latitude);
+    @GetMapping(value = "/place", produces = MediaType.APPLICATION_JSON_VALUE)
+    Optional<Place> findPlace(@RequestParam(name = "lat") Double latitude, @RequestParam(name = "lon") Double longitude) throws JsonProcessingException {
+        return placeService.findPlaceAndSave(latitude, longitude);
     }
 
     @GetMapping("/places")
