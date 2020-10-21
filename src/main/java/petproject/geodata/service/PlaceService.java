@@ -61,7 +61,16 @@ public class PlaceService {
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(response);
-        String details = jsonNode.get("features").get(0).get("properties").toString();
+        
+        if (jsonNode.get("error") != null) {
+            return Optional.empty();
+        }
+
+        JsonNode featuresNode = jsonNode.get("features");
+        JsonNode firstFeature = featuresNode.get(0);
+        JsonNode firstFeatureProperties = firstFeature.get("properties");
+        String details = firstFeatureProperties.toString();
+        
         Place place = mapper.readValue(details, Place.class);
 
         return Optional.of(place);
