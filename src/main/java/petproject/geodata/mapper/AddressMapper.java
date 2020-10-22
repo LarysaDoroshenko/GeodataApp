@@ -1,25 +1,25 @@
 package petproject.geodata.mapper;
 
 import org.springframework.stereotype.Service;
-import petproject.geodata.domain.Address;
+import petproject.geodata.domain.AddressEntity;
 import petproject.geodata.dto.AddressDto;
 
 @Service
 public class AddressMapper {
 
-    public Address map(AddressDto addressDto) {
-        Address address = new Address();
-        address.setCity(addressDto.getCity());
-        address.setCountry(addressDto.getCountry());
-        address.setPostcode(addressDto.getPostcode());
-        return address;
+    public AddressEntity map(AddressDto addressDto) {
+        AddressEntity addressEntity = new AddressEntity();
+        addressEntity.setCity(addressDto.getCity());
+        addressEntity.setCountry(addressDto.getCountry());
+        addressEntity.setPostcode(addressDto.getPostcode());
+        return addressEntity;
     }
 
-    public AddressDto map(Address address) {
+    public AddressDto map(AddressEntity addressEntity) {
         AddressDto addressDto = new AddressDto();
-        addressDto.setCity(address.getCity());
-        addressDto.setCountry(address.getCountry());
-        addressDto.setPostcode(address.getPostcode());
+        addressDto.setCity(addressEntity.getCity());
+        addressDto.setCountry(addressEntity.getCountry());
+        addressDto.setPostcode(addressEntity.getPostcode());
         return addressDto;
     }
 

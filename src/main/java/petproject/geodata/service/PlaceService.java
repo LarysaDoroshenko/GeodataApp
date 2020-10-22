@@ -3,7 +3,7 @@ package petproject.geodata.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import petproject.geodata.domain.Place;
+import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.mapper.PlaceMapper;
 import petproject.geodata.repository.AddressRepository;
@@ -26,19 +26,19 @@ public class PlaceService {
     private PlaceMapper pLaceMapper;
 
     public List<PlaceDto> getAllPlaces() {
-        List<Place> placeList = placeRepository.findAll();
-        
-        return placeList.stream()
-                .map(place -> pLaceMapper.map(place))
+        List<PlaceEntity> placeEntityList = placeRepository.findAll();
+
+        return placeEntityList.stream()
+                .map(placeEntity -> pLaceMapper.map(placeEntity))
                 .collect(Collectors.toList());
     }
 
     public Optional<PlaceDto> findPlaceOrFindAndSaveIfNotYetSaved(Double latitude, Double longitude) throws JsonProcessingException {
-        Optional<Place> byLatitudeAndLongitude = placeRepository.findByLatitudeAndLongitude(latitude, longitude);
+        Optional<PlaceEntity> byLatitudeAndLongitude = placeRepository.findByLatitudeAndLongitude(latitude, longitude);
 
         if (byLatitudeAndLongitude.isPresent()) {
-            Place place = byLatitudeAndLongitude.get();
-            PlaceDto placeDto = pLaceMapper.map(place);
+            PlaceEntity placeEntity = byLatitudeAndLongitude.get();
+            PlaceDto placeDto = pLaceMapper.map(placeEntity);
 
             return Optional.of(placeDto);
         }
@@ -53,9 +53,9 @@ public class PlaceService {
             placeDto.setLongitude(longitude);
             placeDto.setLatitude(latitude);
 
-            Place place = pLaceMapper.map(placeDto);
-            addressRepository.save(place.getAddress());
-            placeRepository.save(place);
+            PlaceEntity placeEntity = pLaceMapper.map(placeDto);
+            addressRepository.save(placeEntity.getAddressEntity());
+            placeRepository.save(placeEntity);
 
             return optionalPlace;
         }

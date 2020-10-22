@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "address")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class Address {
+public class AddressEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

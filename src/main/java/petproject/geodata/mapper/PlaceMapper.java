@@ -2,8 +2,8 @@ package petproject.geodata.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import petproject.geodata.domain.Address;
-import petproject.geodata.domain.Place;
+import petproject.geodata.domain.AddressEntity;
+import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.AddressDto;
 import petproject.geodata.dto.PlaceDto;
 
@@ -13,33 +13,33 @@ public class PlaceMapper {
     @Autowired
     private AddressMapper addressMapper;
 
-    public Place map(PlaceDto placeDto) {
-        Place place = new Place();
-        place.setLatitude(placeDto.getLatitude());
-        place.setLongitude(placeDto.getLongitude());
-        place.setPlaceId(placeDto.getPlaceId());
-        place.setDisplayName(placeDto.getDisplayName());
-        place.setElementType(placeDto.getElementType());
-        place.setOsmId(placeDto.getOsmId());
-        place.setOsmType(placeDto.getOsmType());
+    public PlaceEntity map(PlaceDto placeDto) {
+        PlaceEntity placeEntity = new PlaceEntity();
+        placeEntity.setLatitude(placeDto.getLatitude());
+        placeEntity.setLongitude(placeDto.getLongitude());
+        placeEntity.setPlaceId(placeDto.getPlaceId());
+        placeEntity.setDisplayName(placeDto.getDisplayName());
+        placeEntity.setElementType(placeDto.getElementType());
+        placeEntity.setOsmId(placeDto.getOsmId());
+        placeEntity.setOsmType(placeDto.getOsmType());
 
-        Address address = addressMapper.map(placeDto.getAddressDto());
-        place.setAddress(address);
+        AddressEntity addressEntity = addressMapper.map(placeDto.getAddressDto());
+        placeEntity.setAddressEntity(addressEntity);
 
-        return place;
+        return placeEntity;
     }
 
-    public PlaceDto map(Place place) {
+    public PlaceDto map(PlaceEntity placeEntity) {
         PlaceDto placeDto = new PlaceDto();
-        placeDto.setLatitude(place.getLatitude());
-        placeDto.setLongitude(place.getLongitude());
-        placeDto.setPlaceId(place.getPlaceId());
-        placeDto.setDisplayName(place.getDisplayName());
-        placeDto.setElementType(place.getElementType());
-        placeDto.setOsmId(place.getOsmId());
-        placeDto.setOsmType(place.getOsmType());
+        placeDto.setLatitude(placeEntity.getLatitude());
+        placeDto.setLongitude(placeEntity.getLongitude());
+        placeDto.setPlaceId(placeEntity.getPlaceId());
+        placeDto.setDisplayName(placeEntity.getDisplayName());
+        placeDto.setElementType(placeEntity.getElementType());
+        placeDto.setOsmId(placeEntity.getOsmId());
+        placeDto.setOsmType(placeEntity.getOsmType());
 
-        AddressDto addressDto = addressMapper.map(place.getAddress());
+        AddressDto addressDto = addressMapper.map(placeEntity.getAddressEntity());
         placeDto.setAddressDto(addressDto);
 
         return placeDto;

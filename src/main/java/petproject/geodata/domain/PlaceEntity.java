@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "place", uniqueConstraints = {@UniqueConstraint(columnNames = {"longitude", "latitude"})})
 @Data
-public class Place {
+public class PlaceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,6 @@ public class Place {
     private String osmType;
 
     @OneToOne
-    private Address address;
+    private AddressEntity addressEntity;
 
 }
