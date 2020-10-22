@@ -2,6 +2,7 @@ package petproject.geodata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.PlaceDto;
@@ -60,6 +61,11 @@ public class PlaceService {
             return optionalPlace;
         }
         return Optional.empty();
+    }
+    
+    @Scheduled(fixedRate = 1_000)
+    void test() {
+        System.out.println("test");
     }
 
 }
