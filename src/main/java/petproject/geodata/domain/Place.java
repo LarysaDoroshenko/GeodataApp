@@ -7,7 +7,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "place")
+@Table(name = "place", uniqueConstraints = {@UniqueConstraint(columnNames = {"longitude", "latitude"})})
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class Place {

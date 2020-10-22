@@ -1,11 +1,8 @@
 package petproject.geodata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import petproject.geodata.domain.Place;
 import petproject.geodata.repository.AddressRepository;
 import petproject.geodata.repository.PlaceRepository;
@@ -16,23 +13,28 @@ import java.util.Optional;
 @Service
 public class PlaceService {
 
-    private static final String URL_TEMPLATE = "https://nominatim.openstreetmap.org/reverse?format=geojson&lat=%s&lon=%s";
-
     @Autowired
     private PlaceRepository placeRepository;
     @Autowired
     private AddressRepository addressRepository;
     @Autowired
-    private RestTemplate restTemplate;
-    
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private PlaceApiService placeApiService;
 
     public List<Place> getAllPlaces() {
         return placeRepository.findAll();
     }
 
-    public Optional<Place> findPlaceAndSave(Double latitude, Double longitude) throws JsonProcessingException {
-        Optional<Place> optionalPlace = findPlace(latitude, longitude);
+    public Optional<Place> findPlaceOrFindAndSaveIfNotYetSaved(Double latitude, Double longitude) throws JsonProcessingException {
+        Optional<Place> byLatitudeAndLongitude = placeRepository.findByLatitudeAndLongitude(latitude, longitude);
+
+        if (byLatitudeAndLongitude.isPresent()) {
+            return byLatitudeAndLongitude;
+        }
+        return findAndSaveNewPlace(latitude, longitude);
+    }
+
+    private Optional<Place> findAndSaveNewPlace(Double latitude, Double longitude) throws JsonProcessingException {
+        Optional<Place> optionalPlace = placeApiService.findPlace(latitude, longitude);
 
         if (optionalPlace.isPresent()) {
             Place place = optionalPlace.get();
@@ -45,30 +47,6 @@ public class PlaceService {
             return optionalPlace;
         }
         return Optional.empty();
-    }
-
-    private Optional<Place> findPlace(Double latitude, Double longitude) throws JsonProcessingException {
-        String url = String.format(URL_TEMPLATE, latitude, longitude);
-        String response = restTemplate.getForObject(url, String.class);
-
-        if (response == null) {
-            return Optional.empty();
-        }
-
-        JsonNode jsonNode = objectMapper.readTree(response);
-        
-        if (jsonNode.get("error") != null) {
-            return Optional.empty();
-        }
-
-        JsonNode featuresNode = jsonNode.get("features");
-        JsonNode firstFeature = featuresNode.get(0);
-        JsonNode firstFeatureProperties = firstFeature.get("properties");
-        String details = firstFeatureProperties.toString();
-        
-        Place place = objectMapper.readValue(details, Place.class);
-
-        return Optional.of(place);
     }
 
 }

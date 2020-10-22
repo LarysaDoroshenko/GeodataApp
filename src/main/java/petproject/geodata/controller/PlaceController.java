@@ -21,8 +21,8 @@ public class PlaceController {
     private PlaceService placeService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    Optional<Place> findPlace(@RequestParam(name = "lat") Double latitude, @RequestParam(name = "lon") Double longitude) throws JsonProcessingException {
-        return placeService.findPlaceAndSave(latitude, longitude);
+    Optional<Place> findPlaceAndSave(@RequestParam(name = "lat") Double latitude, @RequestParam(name = "lon") Double longitude) throws JsonProcessingException {
+        return placeService.findPlaceOrFindAndSaveIfNotYetSaved(latitude, longitude);
     }
 
     @GetMapping("/list")
