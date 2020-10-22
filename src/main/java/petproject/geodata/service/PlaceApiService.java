@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import petproject.geodata.domain.Place;
+import petproject.geodata.dto.PlaceDto;
 
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ public class PlaceApiService {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public Optional<Place> findPlace(Double latitude, Double longitude) throws JsonProcessingException {
+    public Optional<PlaceDto> findPlace(Double latitude, Double longitude) throws JsonProcessingException {
         String url = String.format(URL_TEMPLATE, latitude, longitude);
         String response = restTemplate.getForObject(url, String.class);
 
@@ -39,7 +39,7 @@ public class PlaceApiService {
         JsonNode firstFeatureProperties = firstFeature.get("properties");
         String details = firstFeatureProperties.toString();
 
-        Place place = objectMapper.readValue(details, Place.class);
+        PlaceDto place = objectMapper.readValue(details, PlaceDto.class);
 
         return Optional.of(place);
     }

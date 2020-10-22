@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import petproject.geodata.domain.Place;
+import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.service.PlaceService;
 
 import java.util.List;
@@ -21,12 +21,12 @@ public class PlaceController {
     private PlaceService placeService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    Optional<Place> findPlaceAndSave(@RequestParam(name = "lat") Double latitude, @RequestParam(name = "lon") Double longitude) throws JsonProcessingException {
+    Optional<PlaceDto> findPlaceAndSave(@RequestParam(name = "lat") Double latitude, @RequestParam(name = "lon") Double longitude) throws JsonProcessingException {
         return placeService.findPlaceOrFindAndSaveIfNotYetSaved(latitude, longitude);
     }
 
     @GetMapping("/list")
-    List<Place> getAllPlaces() {
+    List<PlaceDto> getAllPlaces() {
         return placeService.getAllPlaces();
     }
 
