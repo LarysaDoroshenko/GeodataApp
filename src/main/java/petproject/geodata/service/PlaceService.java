@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class PlaceService {
 
+    public static final int UPDATE_EACH_12_HOURS = 12 * 60 * 60 * 1_000;
     @Autowired
     private PlaceRepository placeRepository;
     @Autowired
@@ -62,9 +63,22 @@ public class PlaceService {
         }
         return Optional.empty();
     }
-    
-    @Scheduled(fixedRate = 1_000)
-    void test() {
+
+    @Scheduled(fixedRate = UPDATE_EACH_12_HOURS)
+    private void test() {
+        List<PlaceDto> placesInDb = getAllPlaces();
+
+        placeRepository.deleteAll();
+        addressRepository.deleteAll();
+
+        placesInDb.forEach(place -> {
+            try {
+                findPlaceOrFindAndSaveIfNotYetSaved(place.getLatitude(), place.getLongitude());
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+
         System.out.println("test");
     }
 
