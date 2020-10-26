@@ -1,4 +1,4 @@
-package petproject.geodata.service;
+package petproject.geodata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -6,6 +6,7 @@ import petproject.geodata.domain.AddressEntity;
 import petproject.geodata.dto.AddressDto;
 import petproject.geodata.mapper.AddressMapper;
 import petproject.geodata.repository.AddressRepository;
+import petproject.geodata.service.AddressService;
 
 import java.util.List;
 import java.util.stream.Collectors;

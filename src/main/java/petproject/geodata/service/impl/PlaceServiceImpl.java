@@ -1,4 +1,4 @@
-package petproject.geodata.service;
+package petproject.geodata.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +9,8 @@ import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.mapper.PlaceMapper;
 import petproject.geodata.repository.AddressRepository;
 import petproject.geodata.repository.PlaceRepository;
+import petproject.geodata.service.PlaceApiService;
+import petproject.geodata.service.PlaceService;
 
 import java.util.List;
 import java.util.Optional;

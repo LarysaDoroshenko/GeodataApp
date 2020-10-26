@@ -1,4 +1,4 @@
-package petproject.geodata.service;
+package petproject.geodata.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import petproject.geodata.dto.PlaceDto;
+import petproject.geodata.service.PlaceApiService;
 
 import java.util.Optional;
 
