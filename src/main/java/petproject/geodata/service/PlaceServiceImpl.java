@@ -2,7 +2,6 @@ package petproject.geodata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.PlaceDto;
@@ -17,8 +16,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PlaceServiceImpl implements PlaceService {
-
-    public static final int UPDATE_EACH_12_HOURS = 12 * 60 * 60 * 1_000;
 
     private final PlaceRepository placeRepository;
     private final AddressRepository addressRepository;
@@ -62,22 +59,6 @@ public class PlaceServiceImpl implements PlaceService {
             return optionalPlace;
         }
         return Optional.empty();
-    }
-
-    @Scheduled(fixedRate = UPDATE_EACH_12_HOURS)
-    private void refreshPlaceListEvery12Hours() {
-        List<PlaceDto> placesInDb = getAllPlaces();
-
-        placeRepository.deleteAll();
-        addressRepository.deleteAll();
-
-        placesInDb.forEach(place -> {
-            try {
-                findPlaceOrFindAndSaveIfNotYetSaved(place.getLatitude(), place.getLongitude());
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
 }
