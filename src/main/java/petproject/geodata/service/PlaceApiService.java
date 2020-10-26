@@ -3,7 +3,7 @@ package petproject.geodata.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import petproject.geodata.dto.PlaceDto;
@@ -11,12 +11,12 @@ import petproject.geodata.dto.PlaceDto;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PlaceApiService {
 
     private static final String URL_TEMPLATE = "https://nominatim.openstreetmap.org/reverse?format=geojson&lat=%s&lon=%s";
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 

@@ -1,6 +1,6 @@
 package petproject.geodata.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import petproject.geodata.domain.AddressEntity;
 import petproject.geodata.dto.AddressDto;
@@ -11,18 +11,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AddressService {
 
-    @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
-    private AddressMapper addressMapper;
+    private final AddressRepository addressRepository;
+    private final AddressMapper addressMapper;
 
     public List<AddressDto> findByCountry(String country) {
         List<AddressEntity> addressEntityList = addressRepository.findByCountry(country);
         
         return addressEntityList.stream()
-                .map(address -> addressMapper.map(address))
+                .map(addressMapper::map)
                 .collect(Collectors.toList());
     }
 

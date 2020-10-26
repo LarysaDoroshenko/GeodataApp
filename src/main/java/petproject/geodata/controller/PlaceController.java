@@ -1,7 +1,7 @@
 package petproject.geodata.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,18 +15,20 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/place")
+@RequiredArgsConstructor
 public class PlaceController {
 
-    @Autowired
-    private PlaceService placeService;
+    private final PlaceService placeService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    Optional<PlaceDto> findPlaceAndSave(@RequestParam(name = "lat") Double latitude, @RequestParam(name = "lon") Double longitude) throws JsonProcessingException {
+    public Optional<PlaceDto> findPlaceAndSave(@RequestParam(name = "lat") Double latitude,
+                                               @RequestParam(name = "lon") Double longitude) throws JsonProcessingException {
+
         return placeService.findPlaceOrFindAndSaveIfNotYetSaved(latitude, longitude);
     }
 
     @GetMapping("/list")
-    List<PlaceDto> getAllPlaces() {
+    public List<PlaceDto> getAllPlaces() {
         return placeService.getAllPlaces();
     }
 

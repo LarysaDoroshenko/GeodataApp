@@ -1,7 +1,7 @@
 package petproject.geodata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import petproject.geodata.domain.PlaceEntity;
@@ -15,23 +15,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PlaceService {
 
     public static final int UPDATE_EACH_12_HOURS = 12 * 60 * 60 * 1_000;
-    @Autowired
-    private PlaceRepository placeRepository;
-    @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
-    private PlaceApiService placeApiService;
-    @Autowired
-    private PlaceMapper pLaceMapper;
+    
+    private final PlaceRepository placeRepository;
+    private final AddressRepository addressRepository;
+    private final PlaceApiService placeApiService;
+    private final PlaceMapper pLaceMapper;
 
     public List<PlaceDto> getAllPlaces() {
         List<PlaceEntity> placeEntityList = placeRepository.findAll();
 
         return placeEntityList.stream()
-                .map(placeEntity -> pLaceMapper.map(placeEntity))
+                .map(pLaceMapper::map)
                 .collect(Collectors.toList());
     }
 
@@ -65,7 +63,7 @@ public class PlaceService {
     }
 
     @Scheduled(fixedRate = UPDATE_EACH_12_HOURS)
-    private void test() {
+    private void refreshPlaceListEvery12Hours() {
         List<PlaceDto> placesInDb = getAllPlaces();
 
         placeRepository.deleteAll();
@@ -78,8 +76,6 @@ public class PlaceService {
                 e.printStackTrace();
             }
         });
-
-        System.out.println("test");
     }
 
 }

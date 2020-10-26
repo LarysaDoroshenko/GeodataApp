@@ -1,6 +1,6 @@
 package petproject.geodata.mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import petproject.geodata.domain.AddressEntity;
 import petproject.geodata.domain.PlaceEntity;
@@ -8,10 +8,10 @@ import petproject.geodata.dto.AddressDto;
 import petproject.geodata.dto.PlaceDto;
 
 @Service
+@RequiredArgsConstructor
 public class PlaceMapper {
 
-    @Autowired
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
 
     public PlaceEntity map(PlaceDto placeDto) {
         PlaceEntity placeEntity = new PlaceEntity();
