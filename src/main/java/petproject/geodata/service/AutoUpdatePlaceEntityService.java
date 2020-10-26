@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.repository.AddressRepository;
 import petproject.geodata.repository.PlaceRepository;
@@ -23,7 +24,8 @@ public class AutoUpdatePlaceEntityService {
     private final PlaceService placeService;
 
     @Scheduled(fixedRate = UPDATE_EVERY_12_HOURS)
-    private void refreshPlaceListEvery12Hours() {
+    @Transactional
+    public void refreshPlaceListEvery12Hours() {
         List<PlaceDto> placesInDb = placeService.getAllPlaces();
 
         placeRepository.deleteAll();
