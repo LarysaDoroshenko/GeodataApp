@@ -2,8 +2,7 @@ package petproject.geodata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import petproject.geodata.dto.PlaceDto;
@@ -12,19 +11,18 @@ import petproject.geodata.repository.PlaceRepository;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AutoUpdatePlaceEntityService {
 
-    private static final int UPDATE_EACH_12_HOURS = 12 * 60 * 60 * 1_000;
-    
-    private static Logger logger = LoggerFactory.getLogger(AutoUpdatePlaceEntityService.class);
+    private static final int UPDATE_EVERY_12_HOURS = 12 * 60 * 60 * 1_000;
 
     private final PlaceRepository placeRepository;
     private final AddressRepository addressRepository;
     private final PlaceService placeService;
 
-    @Scheduled(fixedRate = UPDATE_EACH_12_HOURS)
+    @Scheduled(fixedRate = UPDATE_EVERY_12_HOURS)
     private void refreshPlaceListEvery12Hours() {
         List<PlaceDto> placesInDb = placeService.getAllPlaces();
 
@@ -38,8 +36,7 @@ public class AutoUpdatePlaceEntityService {
                 e.printStackTrace();
             }
         });
-        
-        logger.info("12 hours passed. The update of the Place table is done.");
+        log.info("refreshPlaceListEvery12Hours()");
     }
 
 }
