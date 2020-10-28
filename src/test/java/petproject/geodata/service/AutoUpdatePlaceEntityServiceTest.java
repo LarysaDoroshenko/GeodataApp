@@ -1,0 +1,65 @@
+package petproject.geodata.service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import petproject.geodata.dto.PlaceDto;
+import petproject.geodata.repository.AddressRepository;
+import petproject.geodata.repository.PlaceRepository;
+import petproject.geodata.service.impl.PlaceServiceImpl;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
+public class AutoUpdatePlaceEntityServiceTest {
+
+    private static final double LONGITUDE1 = 1;
+    private static final double LATITUDE1 = 2;
+    private static final double LONGITUDE2 = 3;
+    private static final double LATITUDE2 = 4;
+
+    @Mock
+    private AddressRepository addressRepository;
+    @Mock
+    private PlaceRepository placeRepository;
+    @Mock
+    private PlaceServiceImpl placeServiceImpl;
+
+    @InjectMocks
+    private AutoUpdatePlaceEntityService autoUpdatePlaceEntityService;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void refreshPlaceListEvery12HoursTest() throws JsonProcessingException {
+        PlaceDto placeDto1 = new PlaceDto();
+        placeDto1.setLatitude(LATITUDE1);
+        placeDto1.setLongitude(LONGITUDE1);
+        PlaceDto placeDto2 = new PlaceDto();
+        placeDto2.setLatitude(LATITUDE2);
+        placeDto2.setLongitude(LONGITUDE2);
+        List<PlaceDto> placeDtoList = Arrays.asList(placeDto1, placeDto2);
+        
+        given(placeServiceImpl.getAllPlaces()).willReturn(placeDtoList);
+        
+        autoUpdatePlaceEntityService.refreshPlaceListEvery12Hours();
+        verify(placeRepository).deleteAll();
+        verify(addressRepository).deleteAll();
+        
+        verify(placeServiceImpl).findPlaceOrFindAndSaveIfNotYetSaved(placeDto1.getLatitude(), placeDto1.getLongitude());
+        verify(placeServiceImpl).findPlaceOrFindAndSaveIfNotYetSaved(placeDto2.getLatitude(), placeDto2.getLongitude());
+    }
+    
+}
