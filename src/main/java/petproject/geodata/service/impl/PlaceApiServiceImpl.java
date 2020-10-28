@@ -18,8 +18,7 @@ public class PlaceApiServiceImpl implements PlaceApiService {
     private static final String URL_TEMPLATE = "https://nominatim.openstreetmap.org/reverse?format=geojson&lat=%s&lon=%s";
 
     private final RestTemplate restTemplate;
-
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     public Optional<PlaceDto> findPlace(Double latitude, Double longitude) throws JsonProcessingException {
