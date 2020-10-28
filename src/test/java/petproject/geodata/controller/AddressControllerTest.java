@@ -43,7 +43,7 @@ public class AddressControllerTest {
     @Test
     public void getPlacesByCountryTest() throws Exception {
         AddressDto addressDto = new AddressDto();
-        addressDto.setCity("New York");
+        addressDto.setTown("New York");
         addressDto.setPostcode("1001");
         addressDto.setCountry("USA");
         List<AddressDto> addressDtoList = Collections.singletonList(addressDto);

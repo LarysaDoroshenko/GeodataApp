@@ -80,4 +80,5 @@ public class PlaceControllerTest {
         String contentAsString = response.getContentAsString();
         assertThat(contentAsString).isEqualTo(placeDtoJacksonTester.write(placeDto).getJson());
     }
+    
 }

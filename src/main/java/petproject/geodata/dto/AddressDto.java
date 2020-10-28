@@ -9,7 +9,7 @@ import lombok.Data;
 public class AddressDto {
 
     @JsonAlias(value = "city")
-    private String city;
+    private String town;
     @JsonAlias(value = "postcode")
     private String postcode;
     @JsonAlias(value = "country")

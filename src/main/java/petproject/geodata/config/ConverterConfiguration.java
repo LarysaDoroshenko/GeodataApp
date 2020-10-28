@@ -6,6 +6,10 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import petproject.geodata.domain.AddressEntity;
+import petproject.geodata.domain.PlaceEntity;
+import petproject.geodata.dto.AddressDto;
+import petproject.geodata.dto.PlaceDto;
 
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
@@ -20,6 +24,21 @@ public class ConverterConfiguration {
                 .setFieldMatchingEnabled(true)
                 .setSkipNullEnabled(true)
                 .setFieldAccessLevel(PRIVATE);
+
+        modelMapper.typeMap(AddressEntity.class, AddressDto.class)
+                .addMapping(AddressEntity::getCity, AddressDto::setTown);
+        modelMapper.typeMap(PlaceEntity.class, PlaceDto.class)
+                .addMapping(PlaceEntity::getDisplayName, PlaceDto::setName);
+        modelMapper.typeMap(PlaceEntity.class, PlaceDto.class)
+                .addMapping(PlaceEntity::getAddressEntity, PlaceDto::setAddressDto);
+
+        modelMapper.typeMap(AddressDto.class, AddressEntity.class)
+                .addMapping(AddressDto::getTown, AddressEntity::setCity);
+        modelMapper.typeMap(PlaceDto.class, PlaceEntity.class)
+                .addMapping(PlaceDto::getName, PlaceEntity::setDisplayName);
+        modelMapper.typeMap(PlaceDto.class, PlaceEntity.class)
+                .addMapping(PlaceDto::getAddressDto, PlaceEntity::setAddressEntity);
+
         return modelMapper;
     }
 

@@ -7,9 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import petproject.geodata.domain.AddressEntity;
 import petproject.geodata.dto.AddressDto;
-import petproject.geodata.mapper.AddressMapper;
 import petproject.geodata.repository.AddressRepository;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class AddressServiceImplTest {
     @Mock
     private AddressRepository addressRepository;
     @Mock
-    private AddressMapper addressMapper;
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private AddressServiceImpl addressServiceImpl;
@@ -47,8 +47,8 @@ public class AddressServiceImplTest {
         AddressDto addressDto2 = new AddressDto();
         List<AddressDto> addressDtoList = Arrays.asList(addressDto1, addressDto2);
 
-        given(addressMapper.toDto(addressEntity1)).willReturn(addressDto1);
-        given(addressMapper.toDto(addressEntity2)).willReturn(addressDto2);
+        given(modelMapper.map(addressEntity1, AddressDto.class)).willReturn(addressDto1);
+        given(modelMapper.map(addressEntity2, AddressDto.class)).willReturn(addressDto2);
 
         // when
         List<AddressDto> addressesByCountry = addressServiceImpl.findByCountry("Country");

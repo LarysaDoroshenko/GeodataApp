@@ -2,11 +2,11 @@ package petproject.geodata.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.PlaceDto;
-import petproject.geodata.mapper.PlaceMapper;
 import petproject.geodata.repository.AddressRepository;
 import petproject.geodata.repository.PlaceRepository;
 import petproject.geodata.service.PlaceApiService;
@@ -23,14 +23,14 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceRepository placeRepository;
     private final AddressRepository addressRepository;
     private final PlaceApiService placeApiService;
-    private final PlaceMapper placeMapper;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<PlaceDto> getAllPlaces() {
         List<PlaceEntity> placeEntityList = placeRepository.findAll();
 
         return placeEntityList.stream()
-                .map(placeMapper::toDto)
+                .map(placeEntity -> modelMapper.map(placeEntity, PlaceDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -41,7 +41,7 @@ public class PlaceServiceImpl implements PlaceService {
 
         if (byLatitudeAndLongitude.isPresent()) {
             PlaceEntity placeEntity = byLatitudeAndLongitude.get();
-            PlaceDto placeDto = placeMapper.toDto(placeEntity);
+            PlaceDto placeDto = modelMapper.map(placeEntity, PlaceDto.class);
 
             return Optional.of(placeDto);
         }
@@ -56,7 +56,7 @@ public class PlaceServiceImpl implements PlaceService {
             placeDto.setLongitude(longitude);
             placeDto.setLatitude(latitude);
 
-            PlaceEntity placeEntity = placeMapper.toEntity(placeDto);
+            PlaceEntity placeEntity = modelMapper.map(placeDto, PlaceEntity.class);
             addressRepository.save(placeEntity.getAddressEntity());
             placeRepository.save(placeEntity);
 

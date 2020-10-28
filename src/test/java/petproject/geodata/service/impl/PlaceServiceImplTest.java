@@ -8,10 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.AddressDto;
 import petproject.geodata.dto.PlaceDto;
-import petproject.geodata.mapper.PlaceMapper;
 import petproject.geodata.repository.AddressRepository;
 import petproject.geodata.repository.PlaceRepository;
 import petproject.geodata.service.PlaceApiService;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -35,7 +36,7 @@ public class PlaceServiceImplTest {
     @Mock
     private PlaceRepository placeRepository;
     @Mock
-    private PlaceMapper placeMapper;
+    private ModelMapper modelMapper;
     @Mock
     private PlaceApiService placeApiService;
 
@@ -56,12 +57,12 @@ public class PlaceServiceImplTest {
 
         given(placeRepository.findAll()).willReturn(placeEntityList);
 
-        PlaceDto placeDto = new PlaceDto();
+        PlaceDto placeDto1 = new PlaceDto();
         PlaceDto placeDto2 = new PlaceDto();
-        List<PlaceDto> placeDtoList = Arrays.asList(placeDto, placeDto2);
+        List<PlaceDto> placeDtoList = Arrays.asList(placeDto1, placeDto2);
 
-        given(placeMapper.toDto(placeEntity1)).willReturn(placeDto);
-        given(placeMapper.toDto(placeEntity2)).willReturn(placeDto2);
+        given(modelMapper.map(placeEntity1, PlaceDto.class)).willReturn(placeDto1);
+        given(modelMapper.map(placeEntity2, PlaceDto.class)).willReturn(placeDto2);
 
         // when
         List<PlaceDto> allPlaces = placeServiceImpl.getAllPlaces();
@@ -79,7 +80,7 @@ public class PlaceServiceImplTest {
 
         PlaceDto placeDto = new PlaceDto();
 
-        given(placeMapper.toDto(placeEntity)).willReturn(placeDto);
+        given(modelMapper.map(placeEntity, PlaceDto.class)).willReturn(placeDto);
 
         // when
         Optional<PlaceDto> placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
@@ -104,7 +105,7 @@ public class PlaceServiceImplTest {
 
         PlaceEntity placeEntity = new PlaceEntity();
 
-        given(placeMapper.toEntity(placeDto)).willReturn(placeEntity);
+        given(modelMapper.map(placeDto, PlaceEntity.class)).willReturn(placeEntity);
 
         Optional<PlaceDto> placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
 

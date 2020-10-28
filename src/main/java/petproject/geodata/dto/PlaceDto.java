@@ -14,7 +14,7 @@ public class PlaceDto {
     @JsonAlias(value = "place_id")
     private String placeId;
     @JsonAlias(value = "display_name")
-    private String displayName;
+    private String name;
     @JsonAlias(value = "type")
     private String elementType;
     @JsonAlias(value = "osm_id")
