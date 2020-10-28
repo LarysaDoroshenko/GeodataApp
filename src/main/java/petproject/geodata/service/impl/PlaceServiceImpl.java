@@ -23,14 +23,14 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceRepository placeRepository;
     private final AddressRepository addressRepository;
     private final PlaceApiService placeApiService;
-    private final PlaceMapper pLaceMapper;
+    private final PlaceMapper placeMapper;
 
     @Override
     public List<PlaceDto> getAllPlaces() {
         List<PlaceEntity> placeEntityList = placeRepository.findAll();
 
         return placeEntityList.stream()
-                .map(pLaceMapper::map)
+                .map(placeMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -41,7 +41,7 @@ public class PlaceServiceImpl implements PlaceService {
 
         if (byLatitudeAndLongitude.isPresent()) {
             PlaceEntity placeEntity = byLatitudeAndLongitude.get();
-            PlaceDto placeDto = pLaceMapper.map(placeEntity);
+            PlaceDto placeDto = placeMapper.toDto(placeEntity);
 
             return Optional.of(placeDto);
         }
@@ -56,7 +56,7 @@ public class PlaceServiceImpl implements PlaceService {
             placeDto.setLongitude(longitude);
             placeDto.setLatitude(latitude);
 
-            PlaceEntity placeEntity = pLaceMapper.map(placeDto);
+            PlaceEntity placeEntity = placeMapper.toEntity(placeDto);
             addressRepository.save(placeEntity.getAddressEntity());
             placeRepository.save(placeEntity);
 

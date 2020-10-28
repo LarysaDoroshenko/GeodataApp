@@ -23,7 +23,7 @@ public class AddressServiceImpl implements AddressService {
         List<AddressEntity> addressEntityList = addressRepository.findByCountry(country);
 
         return addressEntityList.stream()
-                .map(addressMapper::map)
+                .map(addressMapper::toDto)
                 .collect(Collectors.toList());
     }
 

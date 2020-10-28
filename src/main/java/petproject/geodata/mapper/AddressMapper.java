@@ -1,26 +1,25 @@
 package petproject.geodata.mapper;
 
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import petproject.geodata.domain.AddressEntity;
 import petproject.geodata.dto.AddressDto;
 
+import java.util.Objects;
+
 @Service
+@RequiredArgsConstructor
 public class AddressMapper {
 
-    public AddressEntity map(AddressDto addressDto) {
-        AddressEntity addressEntity = new AddressEntity();
-        addressEntity.setCity(addressDto.getCity());
-        addressEntity.setCountry(addressDto.getCountry());
-        addressEntity.setPostcode(addressDto.getPostcode());
-        return addressEntity;
+    private final ModelMapper modelMapper;
+
+    public AddressEntity toEntity(AddressDto addressDto) {
+        return Objects.isNull(addressDto) ? null : modelMapper.map(addressDto, AddressEntity.class);
     }
 
-    public AddressDto map(AddressEntity addressEntity) {
-        AddressDto addressDto = new AddressDto();
-        addressDto.setCity(addressEntity.getCity());
-        addressDto.setCountry(addressEntity.getCountry());
-        addressDto.setPostcode(addressEntity.getPostcode());
-        return addressDto;
+    public AddressDto toDto(AddressEntity addressEntity) {
+        return Objects.isNull(addressEntity) ? null : modelMapper.map(addressEntity, AddressDto.class);
     }
 
 }
