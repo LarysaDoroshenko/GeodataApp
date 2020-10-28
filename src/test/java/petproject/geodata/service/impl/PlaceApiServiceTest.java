@@ -79,7 +79,7 @@ public class PlaceApiServiceTest {
     }
 
     @Test
-    public void name() throws JsonProcessingException {
+    public void shouldReturnPlaceDtoWhenJsonNodeIsValid() throws JsonProcessingException {
         // given
         String response = "{response}";
         given(restTemplate.getForObject(url, String.class)).willReturn(response);
@@ -98,4 +98,16 @@ public class PlaceApiServiceTest {
         // then
         assertThat(place).contains(placeDto);
     }
+
+    @Test(expected = JsonProcessingException.class)
+    public void shouldThrowOriginalExceptionWhenObjectMapperThrowsException() throws JsonProcessingException {
+        // given
+        String response = "{response}";
+        given(restTemplate.getForObject(url, String.class)).willReturn(response);
+        given(objectMapper.readTree(response)).willThrow(JsonProcessingException.class);
+
+        // when 
+        placeApiServiceImpl.findPlace(LATITUDE, LONGITUDE);
+    }
+    
 }

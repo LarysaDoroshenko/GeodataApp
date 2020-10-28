@@ -127,4 +127,16 @@ public class PlaceServiceImplTest {
         // then
         assertThat(placeOrFindAndSaveIfNotYetSaved).isEmpty();
     }
+
+    @Test
+    public void shouldThrowOriginalExceptionWhenPlaceApiServiceThrowsException() throws JsonProcessingException {
+        // given
+        given(placeRepository.findByLatitudeAndLongitude(LATITUDE, LONGITUDE)).willReturn(Optional.empty());
+        given(placeApiService.findPlace(LATITUDE, LONGITUDE)).willThrow(JsonProcessingException.class);
+
+        // then
+        assertThatThrownBy(() -> placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE))
+                .isInstanceOf(JsonProcessingException.class)
+                .hasMessage("N/A");
+    }
 }
