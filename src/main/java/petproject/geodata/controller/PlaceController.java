@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import petproject.geodata.dto.ErrorResponse;
 import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.service.PlaceService;
 
@@ -35,6 +33,11 @@ public class PlaceController {
     @GetMapping("/list")
     public List<PlaceDto> getAllPlaces() {
         return placeService.getAllPlaces();
+    }
+    
+    @ExceptionHandler
+    public ErrorResponse handle(Exception ex) {
+        return new ErrorResponse(ex.getMessage());
     }
 
 }
