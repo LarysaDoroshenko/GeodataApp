@@ -116,16 +116,28 @@ public class PlaceServiceImplTest {
     }
 
     @Test
-    public void returnOptionalEmptyIfPlaceNotSavedAndCanNotBeFound() throws JsonProcessingException {
-        // given
+    public void returnUnknownPlaceIfPlaceNotSavedAndCanNotBeFound() throws JsonProcessingException {
         given(placeRepository.findByLatitudeAndLongitude(LATITUDE, LONGITUDE)).willReturn(Optional.empty());
         given(placeApiService.findPlace(LATITUDE, LONGITUDE)).willReturn(Optional.empty());
 
-        // when
+        PlaceDto placeDto = new PlaceDto();
+        placeDto.setLatitude(LATITUDE);
+        placeDto.setLongitude(LONGITUDE);
+        placeDto.setName("Unknown place");
+
+        assertThat(placeDto.getLatitude()).isEqualTo(LATITUDE);
+        assertThat(placeDto.getLongitude()).isEqualTo(LONGITUDE);
+        assertThat(placeDto.getName()).isEqualTo("Unknown place");
+
+        PlaceEntity placeEntity = new PlaceEntity();
+
+        given(modelMapper.map(placeDto, PlaceEntity.class)).willReturn(placeEntity);
+
         Optional<PlaceDto> placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
 
-        // then
-        assertThat(placeOrFindAndSaveIfNotYetSaved).isEmpty();
+        verify(placeRepository).save(placeEntity);
+
+        assertThat(placeOrFindAndSaveIfNotYetSaved).isEqualTo(Optional.of(placeDto));
     }
 
     @Test
@@ -139,4 +151,5 @@ public class PlaceServiceImplTest {
                 .isInstanceOf(JsonProcessingException.class)
                 .hasMessage("N/A");
     }
+    
 }

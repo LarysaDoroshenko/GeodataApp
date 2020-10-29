@@ -62,7 +62,19 @@ public class PlaceServiceImpl implements PlaceService {
 
             return optionalPlace;
         }
-        return Optional.empty();
+        return saveUnknownPlace(latitude, longitude);
+    }
+
+    private Optional<PlaceDto> saveUnknownPlace(Double latitude, Double longitude) {
+        PlaceDto placeDto = new PlaceDto();
+        placeDto.setLongitude(longitude);
+        placeDto.setLatitude(latitude);
+        placeDto.setName("Unknown place");
+
+        PlaceEntity placeEntity = modelMapper.map(placeDto, PlaceEntity.class);
+        placeRepository.save(placeEntity);
+
+        return Optional.of(placeDto);
     }
 
 }
