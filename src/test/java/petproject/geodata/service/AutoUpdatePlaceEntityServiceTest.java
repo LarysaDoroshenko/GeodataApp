@@ -44,6 +44,7 @@ public class AutoUpdatePlaceEntityServiceTest {
 
     @Test
     public void refreshPlaceListEvery12HoursTest() throws JsonProcessingException {
+        // given
         PlaceDto placeDto1 = new PlaceDto();
         placeDto1.setLatitude(LATITUDE1);
         placeDto1.setLongitude(LONGITUDE1);
@@ -54,12 +55,40 @@ public class AutoUpdatePlaceEntityServiceTest {
         
         given(placeServiceImpl.getAllPlaces()).willReturn(placeDtoList);
         
+        // when
         autoUpdatePlaceEntityService.refreshPlaceListEvery12Hours();
+        
+        // then
         verify(placeRepository).deleteAll();
         verify(addressRepository).deleteAll();
         
         verify(placeServiceImpl).findPlaceOrFindAndSaveIfNotYetSaved(placeDto1.getLatitude(), placeDto1.getLongitude());
         verify(placeServiceImpl).findPlaceOrFindAndSaveIfNotYetSaved(placeDto2.getLatitude(), placeDto2.getLongitude());
     }
-    
+
+    // Todo: rename
+    @Test
+    public void name() throws JsonProcessingException {
+        // given
+        PlaceDto placeDto1 = new PlaceDto();
+        placeDto1.setLatitude(LATITUDE1);
+        placeDto1.setLongitude(LONGITUDE1);
+        PlaceDto placeDto2 = new PlaceDto();
+        placeDto2.setLatitude(LATITUDE2);
+        placeDto2.setLongitude(LONGITUDE2);
+        List<PlaceDto> placeDtoList = Arrays.asList(placeDto1, placeDto2);
+
+        given(placeServiceImpl.getAllPlaces()).willReturn(placeDtoList);
+        given(placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE1, LONGITUDE1)).willThrow(JsonProcessingException.class);
+        
+        // when
+        autoUpdatePlaceEntityService.refreshPlaceListEvery12Hours();
+        
+        // then
+        verify(placeRepository).deleteAll();
+        verify(addressRepository).deleteAll();
+        verify(placeServiceImpl).findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE1, LONGITUDE1);
+        verify(placeServiceImpl).findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE2, LONGITUDE2);
+    }
+
 }
