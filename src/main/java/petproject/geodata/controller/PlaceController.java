@@ -34,6 +34,16 @@ public class PlaceController {
     public List<PlaceDto> getAllPlaces() {
         return placeService.getAllPlaces();
     }
+
+    @GetMapping("/list/north")
+    public List<PlaceDto> getPlacesOfNorthernHemisphere() {
+        return placeService.getPlacesOfNorthernHemisphere();
+    }
+
+    @GetMapping("/list/south")
+    public List<PlaceDto> getPlacesOfSouthernHemisphere() {
+        return placeService.getPlacesOfSouthernHemisphere();
+    }
     
     @ExceptionHandler
     public ResponseEntity<PlaceDto> handle(Exception ex) {

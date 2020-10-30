@@ -11,4 +11,8 @@ public interface PlaceService {
 
     PlaceDto findPlaceOrFindAndSaveIfNotYetSaved(Double latitude, Double longitude) throws JsonProcessingException;
 
+    List<PlaceDto> getPlacesOfNorthernHemisphere();
+
+    List<PlaceDto> getPlacesOfSouthernHemisphere();
+    
 }

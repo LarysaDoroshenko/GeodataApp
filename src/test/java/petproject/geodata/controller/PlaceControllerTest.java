@@ -79,5 +79,39 @@ public class PlaceControllerTest {
         String contentAsString = response.getContentAsString();
         assertThat(contentAsString).isEqualTo(placeDtoJacksonTester.write(placeDto).getJson());
     }
+
+    @Test
+    public void returnListOfPlacesOfNorthernHemisphere() throws Exception {
+        List<PlaceDto> placeDtoList = Collections.singletonList(placeDto);
+
+        // given
+        given(placeService.getPlacesOfNorthernHemisphere()).willReturn(placeDtoList);
+
+        // when
+        MockHttpServletResponse response = mockMvc.perform(get("/place/list/north").accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        String contentAsString = response.getContentAsString();
+        assertThat(contentAsString).isEqualTo(listJacksonTester.write(placeDtoList).getJson());
+    }
+
+    @Test
+    public void returnListOfPlacesOfSouthernHemisphere() throws Exception {
+        List<PlaceDto> placeDtoList = Collections.singletonList(placeDto);
+
+        // given
+        given(placeService.getPlacesOfSouthernHemisphere()).willReturn(placeDtoList);
+
+        // when
+        MockHttpServletResponse response = mockMvc.perform(get("/place/list/south").accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        String contentAsString = response.getContentAsString();
+        assertThat(contentAsString).isEqualTo(listJacksonTester.write(placeDtoList).getJson());
+    }
     
 }

@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import petproject.geodata.dao.PlaceDao;
 import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.AddressDto;
 import petproject.geodata.dto.PlaceDto;
@@ -39,6 +40,8 @@ public class PlaceServiceImplTest {
     private ModelMapper modelMapper;
     @Mock
     private PlaceApiService placeApiService;
+    @Mock
+    private PlaceDao placeDao;
 
     @InjectMocks
     private PlaceServiceImpl placeServiceImpl;
@@ -150,6 +153,52 @@ public class PlaceServiceImplTest {
         assertThatThrownBy(() -> placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE))
                 .isInstanceOf(JsonProcessingException.class)
                 .hasMessage("N/A");
+    }
+
+    @Test
+    public void returnListOfPlacesOfNorthernHemisphere() {
+        // given
+        PlaceEntity placeEntity1 = new PlaceEntity();
+        PlaceEntity placeEntity2 = new PlaceEntity();
+        List<PlaceEntity> placeEntityList = Arrays.asList(placeEntity1, placeEntity2);
+
+        given(placeDao.getPlacesOfNorthernHemisphere()).willReturn(placeEntityList);
+
+        PlaceDto placeDto1 = new PlaceDto();
+        PlaceDto placeDto2 = new PlaceDto();
+        List<PlaceDto> placeDtoList = Arrays.asList(placeDto1, placeDto2);
+
+        given(modelMapper.map(placeEntity1, PlaceDto.class)).willReturn(placeDto1);
+        given(modelMapper.map(placeEntity2, PlaceDto.class)).willReturn(placeDto2);
+
+        // when
+        List<PlaceDto> northernPlaces = placeServiceImpl.getPlacesOfNorthernHemisphere();
+
+        // then
+        assertThat(northernPlaces).isEqualTo(placeDtoList);
+    }
+
+    @Test
+    public void returnListOfPlacesOfSouthernHemisphere() {
+        // given
+        PlaceEntity placeEntity1 = new PlaceEntity();
+        PlaceEntity placeEntity2 = new PlaceEntity();
+        List<PlaceEntity> placeEntityList = Arrays.asList(placeEntity1, placeEntity2);
+
+        given(placeDao.getPlacesOfSouthernHemisphere()).willReturn(placeEntityList);
+
+        PlaceDto placeDto1 = new PlaceDto();
+        PlaceDto placeDto2 = new PlaceDto();
+        List<PlaceDto> placeDtoList = Arrays.asList(placeDto1, placeDto2);
+
+        given(modelMapper.map(placeEntity1, PlaceDto.class)).willReturn(placeDto1);
+        given(modelMapper.map(placeEntity2, PlaceDto.class)).willReturn(placeDto2);
+
+        // when
+        List<PlaceDto> allPlaces = placeServiceImpl.getPlacesOfSouthernHemisphere();
+
+        // then
+        assertThat(allPlaces).isEqualTo(placeDtoList);
     }
     
 }
