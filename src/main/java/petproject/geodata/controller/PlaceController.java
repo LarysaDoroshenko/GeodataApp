@@ -2,17 +2,17 @@ package petproject.geodata.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import petproject.geodata.dto.ErrorResponse;
 import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.service.PlaceService;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
-import java.util.Optional;
 
 @Validated
 @RestController
@@ -23,11 +23,11 @@ public class PlaceController {
     private final PlaceService placeService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Optional<PlaceDto> findPlaceAndSave(@RequestParam(name = "lat") @Min(value = -180) @Max(value = 180) Double latitude,
-                                               @RequestParam(name = "lon") @Min(value = -90) @Max(value = 90) Double longitude)
+    public ResponseEntity<PlaceDto> findPlaceAndSave(@RequestParam(name = "lat") @Min(value = -180) @Max(value = 180) Double latitude,
+                                                     @RequestParam(name = "lon") @Min(value = -90) @Max(value = 90) Double longitude)
             throws JsonProcessingException {
 
-        return placeService.findPlaceOrFindAndSaveIfNotYetSaved(latitude, longitude);
+        return ResponseEntity.ok(placeService.findPlaceOrFindAndSaveIfNotYetSaved(latitude, longitude));
     }
 
     @GetMapping("/list")
@@ -36,8 +36,10 @@ public class PlaceController {
     }
     
     @ExceptionHandler
-    public ErrorResponse handle(Exception ex) {
-        return new ErrorResponse(ex.getMessage());
+    public ResponseEntity<PlaceDto> handle(Exception ex) {
+        PlaceDto placeDto = new PlaceDto();
+        placeDto.setName("There is mistake in coordinates. " + ex.getMessage());
+        return new ResponseEntity<>(placeDto, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 }

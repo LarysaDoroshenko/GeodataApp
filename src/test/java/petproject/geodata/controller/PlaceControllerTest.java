@@ -18,7 +18,6 @@ import petproject.geodata.service.PlaceService;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -68,7 +67,7 @@ public class PlaceControllerTest {
     @Test
     public void findPlaceAndSaveTest() throws Exception {
         // given
-        given(placeService.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE)).willReturn(Optional.of(placeDto));
+        given(placeService.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE)).willReturn(placeDto);
 
         // when
         String urlTemplate = String.format("/place?lon=%.4f&lat=%.4f", LONGITUDE, LATITUDE);

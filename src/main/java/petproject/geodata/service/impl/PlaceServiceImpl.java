@@ -36,19 +36,17 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     @Transactional
-    public Optional<PlaceDto> findPlaceOrFindAndSaveIfNotYetSaved(Double latitude, Double longitude) throws JsonProcessingException {
+    public PlaceDto findPlaceOrFindAndSaveIfNotYetSaved(Double latitude, Double longitude) throws JsonProcessingException {
         Optional<PlaceEntity> byLatitudeAndLongitude = placeRepository.findByLatitudeAndLongitude(latitude, longitude);
 
         if (byLatitudeAndLongitude.isPresent()) {
             PlaceEntity placeEntity = byLatitudeAndLongitude.get();
-            PlaceDto placeDto = modelMapper.map(placeEntity, PlaceDto.class);
-
-            return Optional.of(placeDto);
+            return modelMapper.map(placeEntity, PlaceDto.class);
         }
         return findAndSaveNewPlace(latitude, longitude);
     }
 
-    private Optional<PlaceDto> findAndSaveNewPlace(Double latitude, Double longitude) throws JsonProcessingException {
+    private PlaceDto findAndSaveNewPlace(Double latitude, Double longitude) throws JsonProcessingException {
         Optional<PlaceDto> optionalPlace = placeApiService.findPlace(latitude, longitude);
 
         if (optionalPlace.isPresent()) {
@@ -60,12 +58,12 @@ public class PlaceServiceImpl implements PlaceService {
             addressRepository.save(placeEntity.getAddressEntity());
             placeRepository.save(placeEntity);
 
-            return optionalPlace;
+            return optionalPlace.get();
         }
         return saveUnknownPlace(latitude, longitude);
     }
 
-    private Optional<PlaceDto> saveUnknownPlace(Double latitude, Double longitude) {
+    private PlaceDto saveUnknownPlace(Double latitude, Double longitude) {
         PlaceDto placeDto = new PlaceDto();
         placeDto.setLongitude(longitude);
         placeDto.setLatitude(latitude);
@@ -74,7 +72,7 @@ public class PlaceServiceImpl implements PlaceService {
         PlaceEntity placeEntity = modelMapper.map(placeDto, PlaceEntity.class);
         placeRepository.save(placeEntity);
 
-        return Optional.of(placeDto);
+        return placeDto;
     }
 
 }

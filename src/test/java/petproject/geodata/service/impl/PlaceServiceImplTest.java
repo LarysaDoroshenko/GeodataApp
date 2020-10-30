@@ -83,10 +83,10 @@ public class PlaceServiceImplTest {
         given(modelMapper.map(placeEntity, PlaceDto.class)).willReturn(placeDto);
 
         // when
-        Optional<PlaceDto> placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
+        PlaceDto placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
 
         // then
-        assertThat(placeOrFindAndSaveIfNotYetSaved).isEqualTo(Optional.of(placeDto));
+        assertThat(placeOrFindAndSaveIfNotYetSaved).isEqualTo(placeDto);
     }
 
     @Test
@@ -107,12 +107,12 @@ public class PlaceServiceImplTest {
 
         given(modelMapper.map(placeDto, PlaceEntity.class)).willReturn(placeEntity);
 
-        Optional<PlaceDto> placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
+        PlaceDto placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
 
         verify(addressRepository).save(placeEntity.getAddressEntity());
         verify(placeRepository).save(placeEntity);
         
-        assertThat(placeOrFindAndSaveIfNotYetSaved).isEqualTo(Optional.of(placeDto));
+        assertThat(placeOrFindAndSaveIfNotYetSaved).isEqualTo(placeDto);
     }
 
     @Test
@@ -133,11 +133,11 @@ public class PlaceServiceImplTest {
 
         given(modelMapper.map(placeDto, PlaceEntity.class)).willReturn(placeEntity);
 
-        Optional<PlaceDto> placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
+        PlaceDto placeOrFindAndSaveIfNotYetSaved = placeServiceImpl.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE);
 
         verify(placeRepository).save(placeEntity);
 
-        assertThat(placeOrFindAndSaveIfNotYetSaved).isEqualTo(Optional.of(placeDto));
+        assertThat(placeOrFindAndSaveIfNotYetSaved).isEqualTo(placeDto);
     }
 
     @Test
