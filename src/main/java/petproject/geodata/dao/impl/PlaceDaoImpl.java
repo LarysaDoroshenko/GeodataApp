@@ -16,26 +16,27 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class PlaceDaoImpl implements PlaceDao {
+
+    private static final String QUERY_TEMPLATE = "select * from place p left outer join address a " +
+            "on p.address_entity_id = a.id where p.latitude %s 0";
     
     private final JdbcTemplate jdbcTemplate;
     private final PlaceMapper placeMapper;
     
-    private String queryTemplate = "select * from place p left outer join address a on p.address_entity_id = a.id where p.latitude %s 0";
-
     @Override
     public List<PlaceEntity> getPlacesOfNorthernHemisphere() {
-        String placesOfNorthernHemisphere = String.format(queryTemplate, ">");
+        String placesOfNorthernHemisphere = String.format(QUERY_TEMPLATE, ">");
         return jdbcTemplate.query(placesOfNorthernHemisphere, placeMapper);
     }
     
     @Override
     public List<PlaceEntity> getPlacesOfSouthernHemisphere() {
-        String placesOfSouthernHemisphere = String.format(queryTemplate, "<");
+        String placesOfSouthernHemisphere = String.format(QUERY_TEMPLATE, "<");
         return jdbcTemplate.query(placesOfSouthernHemisphere, placeMapper);
     }
 
     @Component
-    private static class PlaceMapper implements RowMapper<PlaceEntity> {
+    public static class PlaceMapper implements RowMapper<PlaceEntity> {
 
         @Override
         public PlaceEntity mapRow(ResultSet resultSet, int i) throws SQLException {
