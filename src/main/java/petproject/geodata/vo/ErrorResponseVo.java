@@ -1,9 +1,9 @@
-package petproject.geodata.dto;
+package petproject.geodata.vo;
 
 import lombok.Value;
 
 @Value
-public class ErrorResponse {
+public class ErrorResponseVo {
     
     String message;
     
