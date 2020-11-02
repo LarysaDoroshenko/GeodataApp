@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import petproject.geodata.dto.ErrorResponse;
 import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.service.PlaceService;
 
@@ -46,10 +47,9 @@ public class PlaceController {
     }
     
     @ExceptionHandler
-    public ResponseEntity<PlaceDto> handle(Exception ex) {
-        PlaceDto placeDto = new PlaceDto();
-        placeDto.setName("There is mistake in coordinates. " + ex.getMessage());
-        return new ResponseEntity<>(placeDto, HttpStatus.UNPROCESSABLE_ENTITY);
+    public ResponseEntity<ErrorResponse> handle(Exception ex) {
+        ErrorResponse errorResponse = new ErrorResponse("There is mistake in coordinates. " + ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 }
