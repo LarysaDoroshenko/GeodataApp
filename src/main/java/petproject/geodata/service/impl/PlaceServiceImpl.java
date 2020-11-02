@@ -15,6 +15,7 @@ import petproject.geodata.service.PlaceService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,27 +30,22 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public List<PlaceDto> getAllPlaces() {
-        List<PlaceEntity> placeEntityList = placeRepository.findAll();
-
-        return placeEntityList.stream()
-                .map(placeEntity -> modelMapper.map(placeEntity, PlaceDto.class))
-                .collect(Collectors.toList());
+        return get(placeRepository::findAll);
     }
 
     @Override
     public List<PlaceDto> getPlacesOfNorthernHemisphere() {
-        List<PlaceEntity> placeEntityList = placeDao.getPlacesOfNorthernHemisphere();
-
-        return placeEntityList.stream()
-                .map(placeEntity -> modelMapper.map(placeEntity, PlaceDto.class))
-                .collect(Collectors.toList());
+        return get(placeDao::getPlacesOfNorthernHemisphere);
     }
 
     @Override
     public List<PlaceDto> getPlacesOfSouthernHemisphere() {
-        List<PlaceEntity> placeEntityList = placeDao.getPlacesOfSouthernHemisphere();
+        return get(placeDao::getPlacesOfSouthernHemisphere);
+    }
 
-        return placeEntityList.stream()
+    private List<PlaceDto> get(Supplier<List<PlaceEntity>> supplier) {
+        return supplier.get()
+                .stream()
                 .map(placeEntity -> modelMapper.map(placeEntity, PlaceDto.class))
                 .collect(Collectors.toList());
     }
