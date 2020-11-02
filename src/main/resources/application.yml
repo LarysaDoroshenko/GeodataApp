@@ -1,9 +1,11 @@
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/geodatadb
+    driverClassName: org.postgresql.Driver
+    jdbcUrl: jdbc:postgresql://localhost:5432/geodatadb
     username: dbuser
     password: pass
+    hikari:
+      maximum-pool-size: 10
   jpa:
     hibernate:
       ddl-auto: create-drop
