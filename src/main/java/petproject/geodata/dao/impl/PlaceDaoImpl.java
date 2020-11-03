@@ -6,8 +6,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import petproject.geodata.dao.PlaceDao;
-import petproject.geodata.domain.AddressEntity;
-import petproject.geodata.domain.PlaceEntity;
+import petproject.geodata.entity.AddressEntity;
+import petproject.geodata.entity.PlaceEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

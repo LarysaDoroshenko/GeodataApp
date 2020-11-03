@@ -6,9 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import petproject.geodata.dto.PlaceDto;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(MockitoExtension.class)
 public class PlaceApiServiceTest {
 
@@ -47,7 +49,6 @@ public class PlaceApiServiceTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         url = String.format(URL_TEMPLATE, LATITUDE, LONGITUDE);
     }
 

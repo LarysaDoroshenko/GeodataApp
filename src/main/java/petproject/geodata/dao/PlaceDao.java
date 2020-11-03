@@ -1,6 +1,6 @@
 package petproject.geodata.dao;
 
-import petproject.geodata.domain.PlaceEntity;
+import petproject.geodata.entity.PlaceEntity;
 
 import java.util.List;
 

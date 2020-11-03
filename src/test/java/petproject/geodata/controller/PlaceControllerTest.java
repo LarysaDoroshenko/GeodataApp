@@ -48,7 +48,7 @@ public class PlaceControllerTest {
     }
 
     @Test
-    public void getAllPlacesTest() throws Exception {
+    public void returnListOfAllPlaces() throws Exception {
         List<PlaceDto> placeDtoList = Collections.singletonList(placeDto);
 
         // given
@@ -65,7 +65,7 @@ public class PlaceControllerTest {
     }
 
     @Test
-    public void findPlaceAndSaveTest() throws Exception {
+    public void returnPlaceAndSaveIt() throws Exception {
         // given
         given(placeService.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE)).willReturn(placeDto);
 

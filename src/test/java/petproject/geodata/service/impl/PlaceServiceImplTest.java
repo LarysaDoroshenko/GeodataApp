@@ -1,18 +1,18 @@
 package petproject.geodata.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import petproject.geodata.dao.PlaceDao;
-import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.AddressDto;
 import petproject.geodata.dto.PlaceDto;
+import petproject.geodata.entity.PlaceEntity;
 import petproject.geodata.repository.AddressRepository;
 import petproject.geodata.repository.PlaceRepository;
 import petproject.geodata.service.PlaceApiService;
@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(MockitoExtension.class)
 public class PlaceServiceImplTest {
 
@@ -46,13 +47,8 @@ public class PlaceServiceImplTest {
     @InjectMocks
     private PlaceServiceImpl placeServiceImpl;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
-    public void getAllPlacesTest() {
+    public void returnListOfAllPlaces() {
         // given
         PlaceEntity placeEntity1 = new PlaceEntity();
         PlaceEntity placeEntity2 = new PlaceEntity();
@@ -75,7 +71,7 @@ public class PlaceServiceImplTest {
     }
 
     @Test
-    public void findPlaceThatAlreadySavedTest() throws JsonProcessingException {
+    public void returnListOfPlacesThatAlreadySaved() throws JsonProcessingException {
         // given
         PlaceEntity placeEntity = new PlaceEntity();
 
@@ -93,7 +89,7 @@ public class PlaceServiceImplTest {
     }
 
     @Test
-    public void findAndSavePlaceThatNotYetSavedTest() throws JsonProcessingException {
+    public void returnPlaceAndSaveItIfItNotYetSaved() throws JsonProcessingException {
         given(placeRepository.findByLatitudeAndLongitude(LATITUDE, LONGITUDE)).willReturn(Optional.empty());
 
         PlaceDto placeDto = new PlaceDto();

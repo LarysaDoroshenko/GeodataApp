@@ -1,4 +1,4 @@
-package petproject.geodata.domain;
+package petproject.geodata.entity;
 
 import lombok.Data;
 

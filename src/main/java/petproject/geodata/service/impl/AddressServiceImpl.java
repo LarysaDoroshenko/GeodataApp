@@ -3,8 +3,8 @@ package petproject.geodata.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import petproject.geodata.domain.AddressEntity;
 import petproject.geodata.dto.AddressDto;
+import petproject.geodata.entity.AddressEntity;
 import petproject.geodata.repository.AddressRepository;
 import petproject.geodata.service.AddressService;
 

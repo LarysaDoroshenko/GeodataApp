@@ -1,12 +1,12 @@
 package petproject.geodata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.repository.AddressRepository;
@@ -19,6 +19,7 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(MockitoExtension.class)
 public class AutoUpdatePlaceEntityServiceTest {
 
@@ -36,11 +37,6 @@ public class AutoUpdatePlaceEntityServiceTest {
 
     @InjectMocks
     private AutoUpdatePlaceEntityService autoUpdatePlaceEntityService;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void refreshPlaceListEvery12HoursTest() throws JsonProcessingException {
@@ -66,9 +62,8 @@ public class AutoUpdatePlaceEntityServiceTest {
         verify(placeServiceImpl).findPlaceOrFindAndSaveIfNotYetSaved(placeDto2.getLatitude(), placeDto2.getLongitude());
     }
 
-    // Todo: rename
     @Test
-    public void name() throws JsonProcessingException {
+    public void shouldThrowOriginalExceptionWhenPlaceServiceThrowsException() throws JsonProcessingException {
         // given
         PlaceDto placeDto1 = new PlaceDto();
         placeDto1.setLatitude(LATITUDE1);

@@ -1,15 +1,14 @@
 package petproject.geodata.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import petproject.geodata.domain.AddressEntity;
-import petproject.geodata.domain.PlaceEntity;
 import petproject.geodata.dto.AddressDto;
 import petproject.geodata.dto.PlaceDto;
+import petproject.geodata.entity.AddressEntity;
+import petproject.geodata.entity.PlaceEntity;
 
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
@@ -44,9 +43,7 @@ public class ConverterConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new Jdk8Module());
-        return objectMapper;
+        return new ObjectMapper();
     }
 
 }

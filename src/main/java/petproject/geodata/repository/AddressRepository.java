@@ -2,7 +2,7 @@ package petproject.geodata.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import petproject.geodata.domain.AddressEntity;
+import petproject.geodata.entity.AddressEntity;
 
 import java.util.List;
 

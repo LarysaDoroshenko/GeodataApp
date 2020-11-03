@@ -41,7 +41,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void getPlacesByCountryTest() throws Exception {
+    public void returnListOfPlacesByCountry() throws Exception {
         AddressDto addressDto = new AddressDto();
         addressDto.setTown("New York");
         addressDto.setPostcode("1001");
