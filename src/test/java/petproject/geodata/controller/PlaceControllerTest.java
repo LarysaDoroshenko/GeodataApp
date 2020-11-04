@@ -1,5 +1,6 @@
 package petproject.geodata.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.service.PlaceService;
+import petproject.geodata.vo.ErrorResponseVo;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,8 @@ public class PlaceControllerTest {
 
     private static final double LONGITUDE = 30.5234;
     private static final double LATITUDE = 50.4501;
+    private static final double ERROR_LONGITUDE = 100.5234;
+    private static final double ERROR_LATITUDE = 100.4501;
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,6 +42,7 @@ public class PlaceControllerTest {
 
     private JacksonTester<List<PlaceDto>> listJacksonTester;
     private JacksonTester<PlaceDto> placeDtoJacksonTester;
+    private JacksonTester<ErrorResponseVo> errorResponseVoJacksonTester;
 
     private PlaceDto placeDto;
 
@@ -113,5 +118,53 @@ public class PlaceControllerTest {
         String contentAsString = response.getContentAsString();
         assertThat(contentAsString).isEqualTo(listJacksonTester.write(placeDtoList).getJson());
     }
-    
+
+    @Test
+    public void shouldHandleExceptionIfParamsAreOutOfLimits() throws Exception {
+        // given
+        ErrorResponseVo errorResponseVo = new ErrorResponseVo("There is mistake in coordinates. findPlaceAndSave.longitude: must be less than or equal to 90");
+        
+        // when
+        String urlTemplate = String.format("/place?lon=%.4f&lat=%.4f", ERROR_LONGITUDE, ERROR_LATITUDE);
+        MockHttpServletResponse response = mockMvc.perform(get(urlTemplate).accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+        assertThat(response.getContentAsString()).isEqualTo(errorResponseVoJacksonTester.write(errorResponseVo).getJson());
+    }
+
+    @Test
+    public void shouldHandleOriginalJsonProcessingExceptionWhenPlaceServiceThrowsJsonProcessingException() throws Exception {
+        // given
+        ErrorResponseVo errorResponseVo = new ErrorResponseVo("JsonProcessingException: N/A");
+        given(placeService.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE)).willThrow(JsonProcessingException.class);
+
+        // when
+        String urlTemplate = String.format("/place?lon=%.4f&lat=%.4f", LONGITUDE, LATITUDE);
+        MockHttpServletResponse response = mockMvc.perform(get(urlTemplate).accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.getContentAsString()).isEqualTo(errorResponseVoJacksonTester.write(errorResponseVo).getJson());
+    }
+
+    @Test
+    public void shouldHandleOriginalExceptionWhenPlaceServiceThrowsException() throws Exception {
+        // given
+        RuntimeException runtimeException = new RuntimeException("RuntimeException");
+        ErrorResponseVo errorResponseVo = new ErrorResponseVo("Exception occurred: RuntimeException");
+        given(placeService.findPlaceOrFindAndSaveIfNotYetSaved(LATITUDE, LONGITUDE)).willThrow(runtimeException);
+
+        // when
+        String urlTemplate = String.format("/place?lon=%.4f&lat=%.4f", LONGITUDE, LATITUDE);
+        MockHttpServletResponse response = mockMvc.perform(get(urlTemplate).accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.getContentAsString()).isEqualTo(errorResponseVoJacksonTester.write(errorResponseVo).getJson());
+    }
+
 }

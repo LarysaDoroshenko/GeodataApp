@@ -11,6 +11,7 @@ import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.service.PlaceService;
 import petproject.geodata.vo.ErrorResponseVo;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
@@ -45,11 +46,23 @@ public class PlaceController {
     public List<PlaceDto> getPlacesOfSouthernHemisphere() {
         return placeService.getPlacesOfSouthernHemisphere();
     }
-    
+
     @ExceptionHandler
-    public ResponseEntity<ErrorResponseVo> handle(Exception ex) {
+    public ResponseEntity<ErrorResponseVo> handle(ConstraintViolationException ex) {
         ErrorResponseVo errorResponseVo = new ErrorResponseVo("There is mistake in coordinates. " + ex.getMessage());
         return new ResponseEntity<>(errorResponseVo, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponseVo> handle(JsonProcessingException ex) {
+        ErrorResponseVo errorResponseVo = new ErrorResponseVo("JsonProcessingException: " + ex.getMessage());
+        return new ResponseEntity<>(errorResponseVo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponseVo> handle(Exception ex) {
+        ErrorResponseVo errorResponseVo = new ErrorResponseVo("Exception occurred: " + ex.getMessage());
+        return new ResponseEntity<>(errorResponseVo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
