@@ -1,15 +1,13 @@
-package petproject.geodata.domain;
+package petproject.geodata.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "address")
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class Address {
+public class AddressEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

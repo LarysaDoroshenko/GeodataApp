@@ -1,33 +1,68 @@
 package petproject.geodata.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import petproject.geodata.domain.Place;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import petproject.geodata.dto.PlaceDto;
 import petproject.geodata.service.PlaceService;
+import petproject.geodata.vo.ErrorResponseVo;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
-import java.util.Optional;
 
+@Validated
 @RestController
 @RequestMapping(value = "/place")
+@RequiredArgsConstructor
 public class PlaceController {
 
-    @Autowired
-    private PlaceService placeService;
+    private final PlaceService placeService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    Optional<Place> findPlace(@RequestParam(name = "lat") Double latitude, @RequestParam(name = "lon") Double longitude) throws JsonProcessingException {
-        return placeService.findPlaceAndSave(latitude, longitude);
+    public ResponseEntity<PlaceDto> findPlaceAndSave(@RequestParam(name = "lat") @Min(value = -180) @Max(value = 180) Double latitude,
+                                                     @RequestParam(name = "lon") @Min(value = -90) @Max(value = 90) Double longitude)
+            throws JsonProcessingException {
+
+        return ResponseEntity.ok(placeService.findPlaceOrFindAndSaveIfNotYetSaved(latitude, longitude));
     }
 
     @GetMapping("/list")
-    List<Place> getAllPlaces() {
+    public List<PlaceDto> getAllPlaces() {
         return placeService.getAllPlaces();
+    }
+
+    @GetMapping("/list/north")
+    public List<PlaceDto> getPlacesOfNorthernHemisphere() {
+        return placeService.getPlacesOfNorthernHemisphere();
+    }
+
+    @GetMapping("/list/south")
+    public List<PlaceDto> getPlacesOfSouthernHemisphere() {
+        return placeService.getPlacesOfSouthernHemisphere();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponseVo> handle(ConstraintViolationException ex) {
+        ErrorResponseVo errorResponseVo = new ErrorResponseVo("There is mistake in coordinates. " + ex.getMessage());
+        return new ResponseEntity<>(errorResponseVo, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponseVo> handle(JsonProcessingException ex) {
+        ErrorResponseVo errorResponseVo = new ErrorResponseVo("JsonProcessingException: " + ex.getMessage());
+        return new ResponseEntity<>(errorResponseVo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponseVo> handle(Exception ex) {
+        ErrorResponseVo errorResponseVo = new ErrorResponseVo("Exception occurred: " + ex.getMessage());
+        return new ResponseEntity<>(errorResponseVo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

@@ -1,24 +1,24 @@
 package petproject.geodata.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import petproject.geodata.domain.Address;
+import petproject.geodata.dto.AddressDto;
 import petproject.geodata.service.AddressService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/address")
+@RequiredArgsConstructor
 public class AddressController {
 
-    @Autowired
-    private AddressService addressService;
+    private final AddressService addressService;
 
     @GetMapping("/{country}")
-    List<Address> getPlacesByCountry(@PathVariable String country) {
+    public List<AddressDto> getPlacesByCountry(@PathVariable String country) {
         return addressService.findByCountry(country);
     }
 
