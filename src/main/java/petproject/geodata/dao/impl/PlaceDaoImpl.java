@@ -41,7 +41,7 @@ public class PlaceDaoImpl implements PlaceDao {
         @Override
         public PlaceEntity mapRow(ResultSet resultSet, int i) throws SQLException {
             AddressEntity addressEntity = new AddressEntity();
-            addressEntity.setId(resultSet.getLong("id"));
+            addressEntity.setId(resultSet.getLong("address_entity_id"));
             addressEntity.setCity(resultSet.getString("city"));
             addressEntity.setPostcode(resultSet.getString("postcode"));
             addressEntity.setCountry(resultSet.getString("country"));
