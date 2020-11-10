@@ -25,8 +25,8 @@ public class PlaceController {
     private final PlaceService placeService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PlaceDto> findPlaceAndSave(@RequestParam(name = "lat") @Min(value = -180) @Max(value = 180) Double latitude,
-                                                     @RequestParam(name = "lon") @Min(value = -90) @Max(value = 90) Double longitude)
+    public ResponseEntity<PlaceDto> findPlaceAndSave(@RequestParam(name = "lat") @Min(value = -90) @Max(value = 90) Double latitude,
+                                                     @RequestParam(name = "lon") @Min(value = -180) @Max(value = 180) Double longitude)
             throws JsonProcessingException {
 
         return ResponseEntity.ok(placeService.findPlaceOrFindAndSaveIfNotYetSaved(latitude, longitude));
@@ -45,6 +45,11 @@ public class PlaceController {
     @GetMapping("/list/south")
     public List<PlaceDto> getPlacesOfSouthernHemisphere() {
         return placeService.getPlacesOfSouthernHemisphere();
+    }
+
+    @GetMapping("/list/east")
+    public List<PlaceDto> getPlacesOfEasternHemisphereBeyondTheArcticCircle() {
+        return placeService.getPlacesOfEasternHemisphereBeyondTheArcticCircle();
     }
 
     @ExceptionHandler
