@@ -27,4 +27,9 @@ public class AddressServiceImpl implements AddressService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getTop2OfWesternHemisphere() {
+        return addressRepository.findTop2MostFrequentCountries();
+    }
+
 }

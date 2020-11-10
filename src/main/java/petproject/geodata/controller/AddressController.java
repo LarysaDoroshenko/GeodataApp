@@ -22,4 +22,9 @@ public class AddressController {
         return addressService.findByCountry(country);
     }
 
+    @GetMapping("/top2")
+    public List<String> getTop2OfWesternHemisphere() {
+        return addressService.getTop2OfWesternHemisphere();
+    }
+
 }
