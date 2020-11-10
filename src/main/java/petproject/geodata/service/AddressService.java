@@ -8,4 +8,6 @@ public interface AddressService {
 
     List<AddressDto> findByCountry(String country);
 
+    List<String> getTop2OfWesternHemisphere();
+
 }
