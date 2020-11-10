@@ -30,20 +30,25 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public List<PlaceDto> getAllPlaces() {
-        return get(placeRepository::findAll);
+        return getFromSupplierAndMapToPlaceDto(placeRepository::findAll);
     }
 
     @Override
     public List<PlaceDto> getPlacesOfNorthernHemisphere() {
-        return get(placeDao::getPlacesOfNorthernHemisphere);
+        return getFromSupplierAndMapToPlaceDto(placeDao::getPlacesOfNorthernHemisphere);
     }
 
     @Override
     public List<PlaceDto> getPlacesOfSouthernHemisphere() {
-        return get(placeDao::getPlacesOfSouthernHemisphere);
+        return getFromSupplierAndMapToPlaceDto(placeDao::getPlacesOfSouthernHemisphere);
     }
 
-    private List<PlaceDto> get(Supplier<List<PlaceEntity>> supplier) {
+    @Override
+    public List<PlaceDto> getPlacesOfEasternHemisphereBeyondTheArcticCircle() {
+        return getFromSupplierAndMapToPlaceDto(placeRepository::findPlacesOfEasternHemisphereBeyondTheArcticCircle);
+    }
+
+    private List<PlaceDto> getFromSupplierAndMapToPlaceDto(Supplier<List<PlaceEntity>> supplier) {
         return supplier.get()
                 .stream()
                 .map(placeEntity -> modelMapper.map(placeEntity, PlaceDto.class))

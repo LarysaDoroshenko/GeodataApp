@@ -14,5 +14,7 @@ public interface PlaceService {
     List<PlaceDto> getPlacesOfNorthernHemisphere();
 
     List<PlaceDto> getPlacesOfSouthernHemisphere();
-    
+
+    List<PlaceDto> getPlacesOfEasternHemisphereBeyondTheArcticCircle();
+
 }
