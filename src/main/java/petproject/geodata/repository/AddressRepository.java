@@ -13,14 +13,13 @@ public interface AddressRepository extends JpaRepository<AddressEntity, Long> {
 
     List<AddressEntity> findByCountry(String country);
 
-    @Query("select distinct a.country from AddressEntity a join PlaceEntity p on a.id = p.addressEntity.id and p.longitude < 0 and a.country in (:countries)")
-    List<String> findCountriesOfWesternHemisphere(List<String> countries);
-
-    @Query("select a.country from AddressEntity a group by a.country order by count(a.country) desc")
-    List<String> findCountriesOrderByCount();
+    @Query(value = "select distinct a.country from address a join place p on a.id = p.address_entity_id and p.longitude < 0 and a.country in " +
+            "(select a.country from address a group by a.country order by count(a.country) desc)", 
+    nativeQuery = true)
+    List<String> findCountriesOfWesternHemisphereOrderByCount();
 
     default List<String> findTop2MostFrequentCountries() {
-        return findCountriesOfWesternHemisphere(findCountriesOrderByCount())
+        return findCountriesOfWesternHemisphereOrderByCount()
                 .stream()
                 .limit(2)
                 .collect(Collectors.toList()
