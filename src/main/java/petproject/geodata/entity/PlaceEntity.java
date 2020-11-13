@@ -16,7 +16,6 @@ public class PlaceEntity {
     private Double longitude;
     private Double latitude;
 
-    private String placeId;
     private String displayName;
     private String elementType;
     private String osmId;

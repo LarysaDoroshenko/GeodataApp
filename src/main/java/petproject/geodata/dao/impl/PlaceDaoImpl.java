@@ -50,7 +50,6 @@ public class PlaceDaoImpl implements PlaceDao {
             placeEntity.setId(resultSet.getLong("id"));
             placeEntity.setLongitude(resultSet.getDouble("longitude"));
             placeEntity.setLatitude(resultSet.getDouble("latitude"));
-            placeEntity.setPlaceId(resultSet.getString("place_id"));
             placeEntity.setDisplayName(resultSet.getString("display_name"));
             placeEntity.setElementType(resultSet.getString("element_type"));
             placeEntity.setOsmId(resultSet.getString("osm_id"));

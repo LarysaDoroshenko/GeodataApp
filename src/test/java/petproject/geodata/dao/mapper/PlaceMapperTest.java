@@ -68,7 +68,6 @@ public class PlaceMapperTest {
         assertEquals(PLACE_ENTITY_ID, placeEntity.getId());
         assertEquals(LONGITUDE, placeEntity.getLongitude());
         assertEquals(LATITUDE, placeEntity.getLatitude());
-        assertEquals(PLACE_ID, placeEntity.getPlaceId());
         assertEquals(DISPLAY_NAME, placeEntity.getDisplayName());
         assertEquals(ELEMENT_TYPE, placeEntity.getElementType());
         assertEquals(OSM_ID, placeEntity.getOsmId());
