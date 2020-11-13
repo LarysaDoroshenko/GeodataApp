@@ -13,8 +13,6 @@ public class PlaceDto {
     private Double longitude;
     private Double latitude;
 
-    @JsonAlias(value = "place_id")
-    private String placeId;
     @JsonAlias(value = "display_name")
     private String name;
     @JsonAlias(value = "type")
