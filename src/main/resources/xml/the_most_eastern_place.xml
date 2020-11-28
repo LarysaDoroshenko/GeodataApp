@@ -1,0 +1,15 @@
+<PlaceEntity>
+  <id>2</id>
+  <longitude>18.303</longitude>
+  <latitude>-33.889</latitude>
+  <displayName>Cape Town, City of Cape Town, Western Cape, 8001, South Africa</displayName>
+  <elementType>city</elementType>
+  <osmId>32675806</osmId>
+  <osmType>node</osmType>
+  <addressEntity>
+    <id>2</id>
+    <city>Cape Town</city>
+    <postcode>8001</postcode>
+    <country>South Africa</country>
+  </addressEntity>
+</PlaceEntity>
