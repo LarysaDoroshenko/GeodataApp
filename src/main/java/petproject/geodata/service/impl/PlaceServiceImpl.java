@@ -1,7 +1,9 @@
 package petproject.geodata.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +15,14 @@ import petproject.geodata.repository.PlaceRepository;
 import petproject.geodata.service.PlaceApiService;
 import petproject.geodata.service.PlaceService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PlaceServiceImpl implements PlaceService {
@@ -27,6 +32,7 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceApiService placeApiService;
     private final ModelMapper modelMapper;
     private final PlaceDao placeDao;
+    private final XmlMapper xmlMapper;
 
     @Override
     public List<PlaceDto> getAllPlaces() {
@@ -46,6 +52,24 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<PlaceDto> getPlacesOfEasternHemisphereBeyondTheArcticCircle() {
         return getFromSupplierAndMapToPlaceDto(placeRepository::findPlacesOfEasternHemisphereBeyondTheArcticCircle);
+    }
+
+    @Override
+    public void getTheMostEasternPlaceAndSaveItToXml() throws IOException {
+        Optional<PlaceEntity> theMostEasternPlace = placeRepository.findTheMostEasternPlace();
+
+        if (theMostEasternPlace.isPresent()) {
+            xmlMapper.writeValue(new File("src/main/resources/xml/the_most_eastern_place.xml"), theMostEasternPlace.get());
+        }
+    }
+
+    @Override
+    public void getTheMostEasternPlaceAndSaveItToXmlVersion2() throws IOException {
+        Optional<PlaceEntity> theMostEasternPlace = placeRepository.findFirstOrderByLatitude();
+
+        if (theMostEasternPlace.isPresent()) {
+            xmlMapper.writeValue(new File("src/main/resources/xml/the_most_eastern_place.xml"), theMostEasternPlace.get());
+        }
     }
 
     private List<PlaceDto> getFromSupplierAndMapToPlaceDto(Supplier<List<PlaceEntity>> supplier) {

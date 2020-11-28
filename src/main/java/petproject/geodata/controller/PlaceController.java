@@ -14,6 +14,7 @@ import petproject.geodata.vo.ErrorResponseVo;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.io.IOException;
 import java.util.List;
 
 @Validated
@@ -50,6 +51,18 @@ public class PlaceController {
     @GetMapping("/list/east")
     public List<PlaceDto> getPlacesOfEasternHemisphereBeyondTheArcticCircle() {
         return placeService.getPlacesOfEasternHemisphereBeyondTheArcticCircle();
+    }
+
+    @PostMapping("/eastern/place/to/xml")
+    @ResponseStatus(HttpStatus.OK)
+    public void getTheMostEasternPlaceAndSaveItToXml() throws IOException {
+        placeService.getTheMostEasternPlaceAndSaveItToXml();
+    }
+
+    @PostMapping("/eastern/place/to/xml/v2")
+    @ResponseStatus(HttpStatus.OK)
+    public void getTheMostEasternPlaceAndSaveItToXmlVersion2() throws IOException {
+        placeService.getTheMostEasternPlaceAndSaveItToXmlVersion2();
     }
 
     @ExceptionHandler

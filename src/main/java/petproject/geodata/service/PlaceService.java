@@ -3,6 +3,7 @@ package petproject.geodata.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import petproject.geodata.dto.PlaceDto;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface PlaceService {
@@ -16,5 +17,9 @@ public interface PlaceService {
     List<PlaceDto> getPlacesOfSouthernHemisphere();
 
     List<PlaceDto> getPlacesOfEasternHemisphereBeyondTheArcticCircle();
+
+    void getTheMostEasternPlaceAndSaveItToXml() throws IOException;
+
+    void getTheMostEasternPlaceAndSaveItToXmlVersion2() throws IOException;
 
 }
