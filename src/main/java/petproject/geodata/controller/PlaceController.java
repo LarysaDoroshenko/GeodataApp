@@ -65,6 +65,11 @@ public class PlaceController {
         placeService.getTheMostEasternPlaceAndSaveItToXmlVersion2();
     }
 
+    @GetMapping("/from/xml/file")
+    public void getAllPlacesFromXmlFile() throws IOException {
+        placeService.getAllPlacesFromXmlFile();
+    }
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponseVo> handle(ConstraintViolationException ex) {
         ErrorResponseVo errorResponseVo = new ErrorResponseVo("There is mistake in coordinates. " + ex.getMessage());

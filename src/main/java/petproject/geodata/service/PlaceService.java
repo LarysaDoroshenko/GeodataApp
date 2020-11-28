@@ -22,4 +22,6 @@ public interface PlaceService {
 
     void getTheMostEasternPlaceAndSaveItToXmlVersion2() throws IOException;
 
+    List<PlaceDto> getAllPlacesFromXmlFile() throws IOException;
+
 }
