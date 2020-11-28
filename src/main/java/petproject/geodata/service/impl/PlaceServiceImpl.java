@@ -17,6 +17,9 @@ import petproject.geodata.service.PlaceService;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlaceServiceImpl implements PlaceService {
 
+    public static final String SRC_MAIN_RESOURCES_XML = "src/main/resources/xml";
+    public static final String XML = ".xml";
     private final PlaceRepository placeRepository;
     private final AddressRepository addressRepository;
     private final PlaceApiService placeApiService;
@@ -70,6 +75,32 @@ public class PlaceServiceImpl implements PlaceService {
         if (theMostEasternPlace.isPresent()) {
             xmlMapper.writeValue(new File("src/main/resources/xml/the_most_eastern_place.xml"), theMostEasternPlace.get());
         }
+    }
+
+    @Override
+    public List<PlaceDto> getAllPlacesFromXmlFile() throws IOException {
+        File fileDirectory = new File(SRC_MAIN_RESOURCES_XML);
+
+        List<PlaceDto> placeDtoList = new ArrayList<>();
+        if (fileDirectory.exists()) {
+            String[] fileList = fileDirectory.list();
+
+            if (fileList != null) {
+                for (String file : fileList) {
+                    if (file.endsWith(XML)) {
+                        String readContent = new String(Files.readAllBytes(Paths.get(SRC_MAIN_RESOURCES_XML + "/" + file)));
+                        PlaceDto placeDto = xmlMapper.readValue(readContent, PlaceDto.class);
+                        placeDtoList.add(placeDto);
+                        log.info(placeDto.toString());
+                    }
+                }
+            } else {
+                log.info("There are no files in the directory {}", SRC_MAIN_RESOURCES_XML);
+            }
+        } else {
+            log.info("There is no such directory: {}", SRC_MAIN_RESOURCES_XML);
+        }
+        return placeDtoList;
     }
 
     private List<PlaceDto> getFromSupplierAndMapToPlaceDto(Supplier<List<PlaceEntity>> supplier) {
